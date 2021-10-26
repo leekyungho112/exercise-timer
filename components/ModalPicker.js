@@ -1,27 +1,22 @@
 import { Picker } from '@react-native-picker/picker';
 import React from 'react';
-import { View, Text, Modal, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Modal, TouchableOpacity } from 'react-native';
 import { Fontisto } from '@expo/vector-icons';
 const ModalPicker = ({
   isModal,
   setIsModal,
-  setExMinutes,
-  exMinutes,
-  setExSecond,
-  exSecond,
   isMove,
-  brMinutes,
-  setBrMinutes,
-  brSecond,
-  setBrSecond,
+  exerciseTime,
+  setExerciseTime,
+  breakTime,
+  setBreakTime,
 }) => {
-  const { width, height } = Dimensions.get('window');
   const start = 0;
   const values = new Array(60).fill(0).map((_, i) => {
     const value = start + i;
     return value;
   });
-
+  console.log(exerciseTime.min);
   return (
     <Modal animationType="slide" transparent={true} visible={isModal}>
       <View
@@ -60,11 +55,11 @@ const ModalPicker = ({
 
               marginTop: 15,
             }}
-            selectedValue={isMove ? exMinutes : brMinutes}
-            onValueChange={(itemValue, itemIndex) =>
+            selectedValue={isMove ? exerciseTime.min : breakTime.min}
+            onValueChange={(itemValue) =>
               isMove
-                ? setExMinutes(Number(itemValue))
-                : setBrMinutes(Number(itemValue))
+                ? setExerciseTime({ ...exerciseTime, min: itemValue })
+                : setBreakTime({ ...breakTime, min: itemValue })
             }
           >
             {values.length > 0 &&
@@ -74,11 +69,11 @@ const ModalPicker = ({
           </Picker>
           <Picker
             style={{ flex: 0.5, marginTop: 15 }}
-            selectedValue={isMove ? exSecond : brSecond}
-            onValueChange={(itemValue, itemIndex) =>
+            selectedValue={isMove ? exerciseTime.sec : breakTime.sec}
+            onValueChange={(itemValue) =>
               isMove
-                ? setExSecond(Number(itemValue))
-                : setBrSecond(Number(itemValue))
+                ? setExerciseTime({ ...exerciseTime, sec: itemValue })
+                : setBreakTime({ ...breakTime, sec: itemValue })
             }
           >
             {values.length > 0 &&

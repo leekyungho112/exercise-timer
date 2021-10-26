@@ -13,10 +13,14 @@ import Button from './Button';
 import ModalPicker from './ModalPicker';
 
 const Timer = () => {
-  const [exMinutes, setExMinutes] = useState(1);
-  const [exSecond, setExSecond] = useState(0);
-  const [brMinutes, setBrMinutes] = useState(0);
-  const [brSecond, setBrSecond] = useState(30);
+  const [exerciseTime, setExerciseTime] = useState({
+    min: 1,
+    sec: 10,
+  });
+  const [breakTime, setBreakTime] = useState({
+    min: 0,
+    sec: 30,
+  });
   const [isMove, setIsMove] = useState(true);
   const [isPaused, setIsPaused] = useState(true);
   const [isBreak, setIsBreak] = useState(false);
@@ -27,37 +31,43 @@ const Timer = () => {
   const secondLeft = useRef(seconds);
 
   const timeBreak = () => {
-    if (brSecond === 0) {
-      if (brMinutes !== 0) {
-        setBrSecond(59);
-        setBrMinutes((m) => m - 1);
+    if (breakTime.sec === 0) {
+      if (breakTime.min !== 0) {
+        setBreakTime({
+          ...breakTime,
+          sec: 59,
+          min: breakTime.min - 1,
+        });
       } else {
         setIsPaused(true);
         setIsBreak(false);
         setCount(0);
-        setBrSecond(30);
-        setBrMinutes(0);
+        setBreakTime({ min: 0, sec: 30 });
       }
     } else {
-      setBrSecond((s) => s - 1);
+      setBreakTime({ ...breakTime, sec: breakTime.sec - 1 });
     }
     setCount((count) => count + 1);
   };
 
   const tick = () => {
-    if (exSecond === 0) {
-      if (exMinutes !== 0) {
-        setExSecond(59);
-        setExMinutes((m) => m - 1);
+    if (exerciseTime.sec === 0) {
+      if (exerciseTime.min !== 0) {
+        setExerciseTime({
+          ...exerciseTime,
+          sec: 59,
+          min: exerciseTime.min - 1,
+        });
       } else {
         setIsBreak(true);
         setCount(0);
         setSeconds(0);
       }
     } else {
-      setExSecond((s) => s - 1);
+      setExerciseTime({ ...exerciseTime, sec: exerciseTime.sec - 1 });
     }
   };
+  console.log('ex', exerciseTime);
 
   useEffect(() => {
     const play = setInterval(() => {
@@ -73,27 +83,29 @@ const Timer = () => {
     }, 1000);
 
     return () => clearInterval(play);
-  }, [isPaused, exMinutes, isBreak, exSecond, count]);
+  }, [isPaused, isBreak, count]);
 
   useEffect(() => {
     if (isBreak) {
       secondLeft.current =
-        brMinutes === 0 ? brSecond : brMinutes * 60 + brSecond + count;
+        breakTime.min === 0
+          ? breakTime.sec
+          : breakTime.min * 60 + breakTime.sec + count;
       setSeconds(secondLeft.current);
     } else {
       secondLeft.current =
-        exMinutes === 0 ? count + 60 : exMinutes * 60 + exSecond + count;
+        exerciseTime.min === 0
+          ? count + 60
+          : exerciseTime.min * 60 + exerciseTime.sec + count;
       setSeconds(secondLeft.current);
     }
-  }, [exMinutes, brMinutes, isBreak, seconds]);
+  }, [exerciseTime, isBreak, seconds]);
   const play = () => {
     setIsPaused(!isPaused);
   };
   const reset = () => {
-    setExMinutes(1);
-    setExSecond(0);
-    setBrMinutes(0);
-    setBrSecond(30);
+    setExerciseTime({ min: 1, sec: 10 });
+    setBreakTime({ min: 0, sec: 30 });
     setIsPaused(true);
     setIsBreak(false);
     setCount(0);
@@ -150,11 +162,19 @@ const Timer = () => {
             }}
           >
             {!isBreak
-              ? `${exMinutes < 10 ? `0${exMinutes}` : exMinutes} : ${
-                  exSecond < 10 ? `0${exSecond}` : exSecond
+              ? `${
+                  exerciseTime.min < 10
+                    ? `0${exerciseTime.min}`
+                    : exerciseTime.min
+                } : ${
+                  exerciseTime.sec < 10
+                    ? `0${exerciseTime.sec}`
+                    : exerciseTime.sec
                 } `
-              : `${brMinutes < 10 ? `0${brMinutes}` : brMinutes} : ${
-                  brSecond < 10 ? `0${brSecond}` : brSecond
+              : `${
+                  breakTime.min < 10 ? `0${breakTime.min}` : breakTime.min
+                } : ${
+                  breakTime.sec < 10 ? `0${breakTime.sec}` : breakTime.sec
                 }`}
           </Text>
         </NeuMorph>
@@ -178,8 +198,10 @@ const Timer = () => {
       <NeuMorph>
         <View style={styles.inputs}>
           <Text style={styles.inputText}>{`start Time(${
-            exMinutes < 10 ? `0${exMinutes}` : exMinutes
-          }:${exSecond < 10 ? `0${exSecond}` : exSecond})`}</Text>
+            exerciseTime.min < 10 ? `0${exerciseTime.min}` : exerciseTime.min
+          }:${
+            exerciseTime.sec < 10 ? `0${exerciseTime.sec}` : exerciseTime.sec
+          })`}</Text>
           <TouchableOpacity
             onPress={() => {
               setIsModal(!isModal);
@@ -194,8 +216,10 @@ const Timer = () => {
         <NeuMorph>
           <View style={styles.inputs}>
             <Text style={styles.inputText}>{`start Time(${
-              brMinutes < 10 ? `0${brMinutes}` : brMinutes
-            }:${brSecond < 10 ? `0${brSecond}` : brSecond})`}</Text>
+              breakTime.min < 10 ? `0${breakTime.min}` : breakTime.min
+            }:${
+              breakTime.sec < 10 ? `0${breakTime.sec}` : breakTime.sec
+            })`}</Text>
             <TouchableOpacity
               onPress={() => {
                 setIsModal(!isModal);
@@ -219,15 +243,11 @@ const Timer = () => {
       <ModalPicker
         isModal={isModal}
         setIsModal={setIsModal}
-        exMinutes={exMinutes}
-        setExMinutes={setExMinutes}
-        exSecond={setExSecond}
-        setExSecond={setExSecond}
+        exerciseTime={exerciseTime}
+        setExerciseTime={setExerciseTime}
+        breakTime={breakTime}
+        setBreakTime={setBreakTime}
         isMove={isMove}
-        brMinutes={brMinutes}
-        setBrMinutes={setBrMinutes}
-        brSecond={brSecond}
-        setBrSecond={setBrSecond}
       />
     </View>
   );

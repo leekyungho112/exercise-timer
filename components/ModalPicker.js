@@ -16,7 +16,7 @@ const ModalPicker = ({
     const value = start + i;
     return value;
   });
-  console.log(exerciseTime.min);
+
   return (
     <Modal animationType="slide" transparent={true} visible={isModal}>
       <View

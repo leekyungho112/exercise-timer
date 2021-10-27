@@ -25,51 +25,35 @@ const Timer = () => {
   const [isPaused, setIsPaused] = useState(true);
   const [isBreak, setIsBreak] = useState(false);
   const [isModal, setIsModal] = useState(false);
-  const [count, setCount] = useState(0);
   const { height } = Dimensions.get('window');
-  const [seconds, setSeconds] = useState(0);
-  const secondLeft = useRef(seconds);
+  const [secondsLeft, setSecondsLeft] = useState(0);
+  const secondRef = useRef(secondsLeft);
 
   const timeBreak = () => {
-    if (breakTime.sec === 0) {
-      if (breakTime.min !== 0) {
-        setBreakTime({
-          ...breakTime,
-          sec: 59,
-          min: breakTime.min - 1,
-        });
-      } else {
-        setIsPaused(true);
-        setIsBreak(false);
-        setCount(0);
-        setBreakTime({ min: 0, sec: 30 });
-      }
+    if (secondRef.current === 0) {
+      setIsBreak(false);
     } else {
-      setBreakTime({ ...breakTime, sec: breakTime.sec - 1 });
+      secondRef.current--;
+      setSecondsLeft(secondRef.current);
     }
-    setCount((count) => count + 1);
   };
 
   const tick = () => {
-    if (exerciseTime.sec === 0) {
-      if (exerciseTime.min !== 0) {
-        setExerciseTime({
-          ...exerciseTime,
-          sec: 59,
-          min: exerciseTime.min - 1,
-        });
-      } else {
-        setIsBreak(true);
-        setCount(0);
-        setSeconds(0);
-      }
+    if (secondRef.current === 0) {
+      setIsBreak(true);
     } else {
-      setExerciseTime({ ...exerciseTime, sec: exerciseTime.sec - 1 });
+      secondRef.current--;
+      setSecondsLeft(secondRef.current);
     }
   };
-  console.log('ex', exerciseTime);
 
   useEffect(() => {
+    secondRef.current = !isBreak
+      ? exerciseTime.min * 60 + exerciseTime.sec
+      : breakTime.min * 60 + breakTime.sec;
+
+    setSecondsLeft(secondRef.current);
+
     const play = setInterval(() => {
       if (isPaused) {
         return;
@@ -78,28 +62,12 @@ const Timer = () => {
         timeBreak();
       } else {
         tick();
-        setCount((count) => count + 1);
       }
     }, 1000);
 
     return () => clearInterval(play);
-  }, [isPaused, isBreak, count]);
+  }, [isPaused, isBreak, secondRef]);
 
-  useEffect(() => {
-    if (isBreak) {
-      secondLeft.current =
-        breakTime.min === 0
-          ? breakTime.sec
-          : breakTime.min * 60 + breakTime.sec + count;
-      setSeconds(secondLeft.current);
-    } else {
-      secondLeft.current =
-        exerciseTime.min === 0
-          ? count + 60
-          : exerciseTime.min * 60 + exerciseTime.sec + count;
-      setSeconds(secondLeft.current);
-    }
-  }, [exerciseTime, isBreak, seconds]);
   const play = () => {
     setIsPaused(!isPaused);
   };
@@ -108,10 +76,15 @@ const Timer = () => {
     setBreakTime({ min: 0, sec: 30 });
     setIsPaused(true);
     setIsBreak(false);
-    setCount(0);
   };
 
-  const percentage = (100 / parseInt(seconds)) * count;
+  const total = !isBreak
+    ? exerciseTime.min * 60 + exerciseTime.sec
+    : breakTime.min * 60 + breakTime.sec;
+  const percentage = Math.floor((100 / parseInt(total)) * secondsLeft);
+  console.log('to', percentage);
+  const minute = Math.floor(secondsLeft / 60);
+  const secon = secondsLeft % 60;
 
   const NeuMorph = ({ children, boxSize, style }) => {
     return (
@@ -162,20 +135,12 @@ const Timer = () => {
             }}
           >
             {!isBreak
-              ? `${
-                  exerciseTime.min < 10
-                    ? `0${exerciseTime.min}`
-                    : exerciseTime.min
-                } : ${
-                  exerciseTime.sec < 10
-                    ? `0${exerciseTime.sec}`
-                    : exerciseTime.sec
+              ? `${minute < 10 ? `0${minute}` : minute} : ${
+                  secon < 10 ? `0${secon}` : secon
                 } `
-              : `${
-                  breakTime.min < 10 ? `0${breakTime.min}` : breakTime.min
-                } : ${
-                  breakTime.sec < 10 ? `0${breakTime.sec}` : breakTime.sec
-                }`}
+              : `${minute < 10 ? `0${minute}` : minute} : ${
+                  secon < 10 ? `0${secon}` : secon
+                } `}
           </Text>
         </NeuMorph>
       </View>

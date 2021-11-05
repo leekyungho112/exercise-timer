@@ -1,5 +1,5 @@
 import { Picker } from '@react-native-picker/picker';
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Modal, TouchableOpacity } from 'react-native';
 import { Fontisto } from '@expo/vector-icons';
 const ModalPicker = ({
@@ -55,11 +55,11 @@ const ModalPicker = ({
 
               marginTop: 15,
             }}
-            selectedValue={isMove ? exerciseTime.min : breakTime.min}
+            selectedValue={isMove ? exerciseTime.min : breakTime.brmin}
             onValueChange={(itemValue) => {
               isMove
                 ? setExerciseTime({ ...exerciseTime, min: itemValue })
-                : setBreakTime({ ...breakTime, min: itemValue });
+                : setBreakTime({ ...breakTime, brmin: itemValue });
             }}
           >
             {values.length > 0 &&
@@ -69,11 +69,11 @@ const ModalPicker = ({
           </Picker>
           <Picker
             style={{ flex: 0.5, marginTop: 15 }}
-            selectedValue={isMove ? exerciseTime.sec : breakTime.sec}
+            selectedValue={isMove ? exerciseTime.sec : breakTime.brsec}
             onValueChange={(itemValue) =>
               isMove
                 ? setExerciseTime({ ...exerciseTime, sec: itemValue })
-                : setBreakTime({ ...breakTime, sec: itemValue })
+                : setBreakTime({ ...breakTime, brsec: itemValue })
             }
           >
             {values.length > 0 &&

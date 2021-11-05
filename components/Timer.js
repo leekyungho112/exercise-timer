@@ -19,8 +19,8 @@ const Timer = () => {
     sec: 10,
   });
   const [breakTime, setBreakTime] = useState({
-    min: 0,
-    sec: 30,
+    brmin: 0,
+    brsec: 30,
   });
   const [isMove, setIsMove] = useState(true);
   const [isPaused, setIsPaused] = useState(true);
@@ -31,7 +31,13 @@ const Timer = () => {
   const [secondsLeft, setSecondsLeft] = useState(0);
   const secondRef = useRef(secondsLeft);
   const isPausedRef = useRef(isPaused);
+  const [time, setTime] = useState([]);
 
+  const saveTime = () => {
+    setTime(() => {
+      return [...time, { ...exerciseTime, ...breakTime }];
+    });
+  };
   const timeBreak = () => {
     if (secondRef.current === 0) {
       setIsBreak(false);
@@ -53,7 +59,7 @@ const Timer = () => {
   useEffect(() => {
     secondRef.current = !isBreak
       ? exerciseTime.min * 60 + exerciseTime.sec
-      : breakTime.min * 60 + breakTime.sec;
+      : breakTime.brmin * 60 + breakTime.brsec;
 
     setSecondsLeft(secondRef.current);
 
@@ -69,23 +75,23 @@ const Timer = () => {
     }, 1000);
 
     return () => clearInterval(play);
-  }, [isBreak, exerciseTime]);
+  }, [isBreak, exerciseTime, breakTime]);
 
   const play = () => {
     setIsPaused((prev) => (isPausedRef.current = !prev));
   };
   const reset = () => {
     setExerciseTime({ min: 1, sec: 10 });
-    setBreakTime({ min: 0, sec: 30 });
+    setBreakTime({ brmin: 0, brsec: 30 });
     setIsPaused(() => (isPausedRef.current = true));
     setIsBreak(false);
   };
 
   const total = !isBreak
     ? exerciseTime.min * 60 + exerciseTime.sec
-    : breakTime.min * 60 + breakTime.sec;
+    : breakTime.brmin * 60 + breakTime.brsec;
   const percentage = Math.floor((100 / parseInt(total)) * secondsLeft);
-  console.log('to', percentage);
+  console.log(time);
   const minute = Math.floor(secondsLeft / 60);
   const secon = secondsLeft % 60;
 
@@ -180,6 +186,7 @@ const Timer = () => {
                 onPress={() => {
                   setIsModal(!isModal);
                   setIsMove(true);
+                  saveTime();
                 }}
               >
                 <MaterialIcons name="timer" size={30} color="#6DFACD" />
@@ -190,9 +197,9 @@ const Timer = () => {
             <NeuMorph>
               <View style={styles.inputs}>
                 <Text style={styles.inputText}>{`start Time(${
-                  breakTime.min < 10 ? `0${breakTime.min}` : breakTime.min
+                  breakTime.brmin < 10 ? `0${breakTime.brmin}` : breakTime.brmin
                 }:${
-                  breakTime.sec < 10 ? `0${breakTime.sec}` : breakTime.sec
+                  breakTime.brsec < 10 ? `0${breakTime.brsec}` : breakTime.brsec
                 })`}</Text>
                 <TouchableOpacity
                   onPress={() => {
@@ -225,7 +232,7 @@ const Timer = () => {
           />
         </>
       ) : (
-        <List />
+        <List time={time} NeuMorph={NeuMorph} />
       )}
       <View style={{ marginTop: 30 }}>
         <NeuMorph boxSize={70}>

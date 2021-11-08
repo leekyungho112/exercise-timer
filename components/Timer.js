@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   set: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#A5C7FF',
+    color: 'white',
   },
   inputs: {
     width: '100%',

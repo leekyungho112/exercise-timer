@@ -34,25 +34,12 @@ const ModalPicker = ({
             position: 'absolute',
             bottom: 0,
             flexDirection: 'row',
-
             justifyContent: 'center',
           }}
         >
-          <TouchableOpacity onPress={() => setIsModal(!isModal)}>
-            <Text
-              style={{
-                left: 190,
-                top: 5,
-                position: 'absolute',
-              }}
-            >
-              <Fontisto name="close" size={30} color="red" />
-            </Text>
-          </TouchableOpacity>
           <Picker
             style={{
               flex: 0.5,
-
               marginTop: 15,
             }}
             selectedValue={isMove ? exerciseTime.min : breakTime.brmin}
@@ -67,6 +54,11 @@ const ModalPicker = ({
                 <Picker.Item key={index} label={String(index)} value={item} />
               ))}
           </Picker>
+          <TouchableOpacity onPress={() => setIsModal(!isModal)}>
+            <Text style={{ top: 10 }}>
+              <Fontisto name="close" size={30} color="black" />
+            </Text>
+          </TouchableOpacity>
           <Picker
             style={{ flex: 0.5, marginTop: 15 }}
             selectedValue={isMove ? exerciseTime.sec : breakTime.brsec}

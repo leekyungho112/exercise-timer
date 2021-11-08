@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
+  Image,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -12,6 +14,7 @@ import { MaterialIcons, Fontisto } from '@expo/vector-icons';
 import Button from './Button';
 import ModalPicker from './ModalPicker';
 import List from './List';
+import NeuMorph from './NeuMorph';
 
 const Timer = () => {
   const [exerciseTime, setExerciseTime] = useState({
@@ -27,15 +30,16 @@ const Timer = () => {
   const [isBreak, setIsBreak] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [listMode, setListMode] = useState(true);
+  const [countSet, setCountSet] = useState(1);
   const { height } = Dimensions.get('window');
   const [secondsLeft, setSecondsLeft] = useState(0);
   const secondRef = useRef(secondsLeft);
   const isPausedRef = useRef(isPaused);
   const [time, setTime] = useState([]);
-
+  const [count, setCount] = useState(0);
   const saveTime = () => {
     setTime(() => {
-      return [...time, { ...exerciseTime, ...breakTime }];
+      return [...time, { ...exerciseTime, ...breakTime, countSet }];
     });
   };
   const timeBreak = () => {
@@ -50,6 +54,7 @@ const Timer = () => {
   const tick = () => {
     if (secondRef.current === 0) {
       setIsBreak(true);
+      setCount((prevState) => prevState + 1);
     } else {
       secondRef.current--;
       setSecondsLeft(secondRef.current);
@@ -67,10 +72,15 @@ const Timer = () => {
       if (isPausedRef.current) {
         return;
       }
-      if (isBreak) {
-        timeBreak();
+      if (count === countSet) {
+        reset();
+        saveTime();
       } else {
-        tick();
+        if (isBreak) {
+          timeBreak();
+        } else {
+          tick();
+        }
       }
     }, 1000);
 
@@ -85,37 +95,23 @@ const Timer = () => {
     setBreakTime({ brmin: 0, brsec: 30 });
     setIsPaused(() => (isPausedRef.current = true));
     setIsBreak(false);
+    setCountSet(1);
+    setCount(0);
+  };
+  const increase = () => {
+    setCountSet((prevState) => prevState + 1);
+  };
+  const decrease = () => {
+    setCountSet((prevState) => (prevState === 0 ? 0 : prevState - 1));
   };
 
   const total = !isBreak
     ? exerciseTime.min * 60 + exerciseTime.sec
     : breakTime.brmin * 60 + breakTime.brsec;
-  const percentage = Math.floor((100 / parseInt(total)) * secondsLeft);
-  console.log(time);
+
+  const percentage = Math.floor((100 / total) * secondsLeft);
   const minute = Math.floor(secondsLeft / 60);
   const secon = secondsLeft % 60;
-
-  const NeuMorph = ({ children, boxSize, style }) => {
-    return (
-      <View style={styles.topShadow}>
-        <View style={styles.bottomShadow}>
-          <View
-            style={[
-              styles.inner,
-              {
-                borderRadius: boxSize / 2 || 0,
-                width: boxSize || 350,
-                height: boxSize || 55,
-              },
-              style,
-            ]}
-          >
-            {children}
-          </View>
-        </View>
-      </View>
-    );
-  };
 
   return (
     <View
@@ -128,20 +124,30 @@ const Timer = () => {
       {listMode ? (
         <>
           <View style={{ marginTop: 50 }}>
-            <NeuMorph boxSize={260}>
+            <NeuMorph boxSize={150}>
               <Text
                 style={{
                   color: !isBreak ? '#FFC15D' : '#00D0E5',
-                  fontSize: 40,
+                  fontSize: 20,
                   fontWeight: '600',
                 }}
               >
-                {!isBreak ? 'Move' : 'Break'}
+                {!isBreak ? (
+                  <Image
+                    style={styles.logo}
+                    source={require('.././assets/images/move.gif')}
+                  />
+                ) : (
+                  <Image
+                    style={styles.logo}
+                    source={require('.././assets/images/rest.gif')}
+                  />
+                )}
               </Text>
               <Text
                 style={{
                   color: !isBreak ? '#F9F871' : '#009DF1',
-                  fontSize: 70,
+                  fontSize: 30,
                   fontWeight: '600',
                 }}
               >
@@ -170,10 +176,30 @@ const Timer = () => {
               </View>
             </NeuMorph>
           </View>
-
+          <Text style={styles.set}>{`Set ${count} of ${countSet}`}</Text>
+          <View style={{ marginVertical: 25 }}>
+            <NeuMorph>
+              <View style={styles.inputs}>
+                <Text style={styles.inputText}>Set Number</Text>
+                <View style={styles.countBtn}>
+                  <TouchableOpacity onPress={decrease}>
+                    <NeuMorph boxSize={40}>
+                      <Fontisto name="minus-a" size={18} color="#6DFACD" />
+                    </NeuMorph>
+                  </TouchableOpacity>
+                  <Text style={styles.countText}>{countSet}</Text>
+                  <TouchableOpacity onPress={increase}>
+                    <NeuMorph boxSize={40}>
+                      <Fontisto name="plus-a" size={18} color="#6DFACD" />
+                    </NeuMorph>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </NeuMorph>
+          </View>
           <NeuMorph>
             <View style={styles.inputs}>
-              <Text style={styles.inputText}>{`start Time(${
+              <Text style={styles.inputText}>{`Action(${
                 exerciseTime.min < 10
                   ? `0${exerciseTime.min}`
                   : exerciseTime.min
@@ -186,7 +212,6 @@ const Timer = () => {
                 onPress={() => {
                   setIsModal(!isModal);
                   setIsMove(true);
-                  saveTime();
                 }}
               >
                 <MaterialIcons name="timer" size={30} color="#6DFACD" />
@@ -196,7 +221,7 @@ const Timer = () => {
           <View style={{ marginVertical: 25 }}>
             <NeuMorph>
               <View style={styles.inputs}>
-                <Text style={styles.inputText}>{`start Time(${
+                <Text style={styles.inputText}>{`Break(${
                   breakTime.brmin < 10 ? `0${breakTime.brmin}` : breakTime.brmin
                 }:${
                   breakTime.brsec < 10 ? `0${breakTime.brsec}` : breakTime.brsec
@@ -212,12 +237,13 @@ const Timer = () => {
               </View>
             </NeuMorph>
           </View>
-          <View style={{ marginTop: 30 }}>
+          <View style={{ marginTop: 5 }}>
             <Button
               play={play}
               isPaused={isPaused}
               reset={reset}
               NeuMorph={NeuMorph}
+              setListMode={setListMode}
             />
           </View>
 
@@ -232,46 +258,16 @@ const Timer = () => {
           />
         </>
       ) : (
-        <List time={time} NeuMorph={NeuMorph} />
+        <List time={time} setListMode={setListMode} countSet={countSet} />
       )}
-      <View style={{ marginTop: 30 }}>
-        <NeuMorph boxSize={70}>
-          <TouchableOpacity
-            onPress={() => {
-              setListMode((prev) => !prev);
-            }}
-          >
-            <Fontisto name="list-2" size={28} color="white" />
-          </TouchableOpacity>
-        </NeuMorph>
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  inner: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0b60d0',
-  },
-  topShadow: {
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowColor: '#129aff',
-  },
-  bottomShadow: {
-    shadowOffset: {
-      width: -5,
-      height: -5,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowColor: '#042653',
+  logo: {
+    width: 60,
+    height: 60,
   },
   progressBar: {
     backgroundColor: '#EEE8A9',
@@ -280,15 +276,32 @@ const styles = StyleSheet.create({
     width: `90%`,
     borderRadius: 5,
   },
+  set: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#A5C7FF',
+  },
   inputs: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    paddingHorizontal: 25,
+  },
+
+  countBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  countText: {
+    color: '#6DFACD',
+    fontSize: 24,
+    fontWeight: '600',
+    paddingHorizontal: 20,
   },
 
   inputText: {
-    color: '#23C197',
+    color: '#6DFACD',
     fontSize: 16,
     fontWeight: '600',
   },

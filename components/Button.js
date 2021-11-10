@@ -8,9 +8,9 @@ const Button = ({ play, isPaused, reset, setListMode }) => {
       <TouchableOpacity onPress={play}>
         <NeuMorph boxSize={70}>
           {isPaused ? (
-            <Fontisto name="play" size={24} color="#6DFACD" />
+            <Fontisto name="play" size={24} color="#92ff38" />
           ) : (
-            <Fontisto name="pause" size={24} color="#6DFACD" />
+            <Fontisto name="pause" size={24} color="#92ff38" />
           )}
         </NeuMorph>
       </TouchableOpacity>
@@ -25,7 +25,7 @@ const Button = ({ play, isPaused, reset, setListMode }) => {
       </TouchableOpacity>
       <TouchableOpacity onPress={reset}>
         <NeuMorph boxSize={70}>
-          <Ionicons name="refresh-circle" size={40} color="#6DFACD" />
+          <Ionicons name="refresh-circle" size={40} color="#92ff38" />
         </NeuMorph>
       </TouchableOpacity>
     </View>

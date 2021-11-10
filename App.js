@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -9,7 +8,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Timer />
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
     </View>
   );
 }
@@ -19,6 +18,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0b60d0',
+    backgroundColor: '#275c77',
   },
 });

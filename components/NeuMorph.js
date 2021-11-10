@@ -27,25 +27,25 @@ const styles = StyleSheet.create({
   inner: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0b60d0',
+    backgroundColor: '#275c77',
   },
   topShadow: {
     shadowOffset: {
-      width: 5,
-      height: 5,
+      width: 3,
+      height: 3,
     },
     shadowOpacity: 1,
     shadowRadius: 5,
-    shadowColor: '#129aff',
+    shadowColor: '#3b8cb5',
   },
   bottomShadow: {
     shadowOffset: {
-      width: -5,
-      height: -5,
+      width: -3,
+      height: -3,
     },
     shadowOpacity: 1,
     shadowRadius: 5,
-    shadowColor: '#042653',
+    shadowColor: '#132c39',
   },
 });
 export default NeuMorph;

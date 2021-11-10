@@ -125,13 +125,7 @@ const Timer = () => {
         <>
           <View style={{ marginTop: 50 }}>
             <NeuMorph boxSize={150}>
-              <Text
-                style={{
-                  color: !isBreak ? '#FFC15D' : '#00D0E5',
-                  fontSize: 20,
-                  fontWeight: '600',
-                }}
-              >
+              <Text>
                 {!isBreak ? (
                   <Image
                     style={styles.logo}
@@ -146,9 +140,10 @@ const Timer = () => {
               </Text>
               <Text
                 style={{
-                  color: !isBreak ? '#F9F871' : '#009DF1',
+                  color: !isBreak ? '#29C5BC' : '#048FA3',
                   fontSize: 30,
                   fontWeight: '600',
+                  textAlign: 'center',
                 }}
               >
                 {!isBreak
@@ -168,8 +163,10 @@ const Timer = () => {
                   style={
                     ([StyleSheet.absoluteFill],
                     {
-                      backgroundColor: !isBreak ? '#FF5E76' : '#BA9300',
+                      backgroundColor: !isBreak ? '#80F9C0' : '#BA9300',
                       width: `${percentage}%`,
+                      borderRadius: 5,
+                      height: 9,
                     })
                   }
                 />
@@ -184,13 +181,13 @@ const Timer = () => {
                 <View style={styles.countBtn}>
                   <TouchableOpacity onPress={decrease}>
                     <NeuMorph boxSize={40}>
-                      <Fontisto name="minus-a" size={18} color="#6DFACD" />
+                      <Fontisto name="minus-a" size={18} color="#92ff38" />
                     </NeuMorph>
                   </TouchableOpacity>
                   <Text style={styles.countText}>{countSet}</Text>
                   <TouchableOpacity onPress={increase}>
                     <NeuMorph boxSize={40}>
-                      <Fontisto name="plus-a" size={18} color="#6DFACD" />
+                      <Fontisto name="plus-a" size={18} color="#92ff38" />
                     </NeuMorph>
                   </TouchableOpacity>
                 </View>
@@ -214,7 +211,7 @@ const Timer = () => {
                   setIsMove(true);
                 }}
               >
-                <MaterialIcons name="timer" size={30} color="#6DFACD" />
+                <MaterialIcons name="timer" size={30} color="#92ff38" />
               </TouchableOpacity>
             </View>
           </NeuMorph>
@@ -232,7 +229,7 @@ const Timer = () => {
                     setIsMove(false);
                   }}
                 >
-                  <MaterialIcons name="timer" size={30} color="#6DFACD" />
+                  <MaterialIcons name="timer" size={30} color="#92ff38" />
                 </TouchableOpacity>
               </View>
             </NeuMorph>
@@ -270,16 +267,16 @@ const styles = StyleSheet.create({
     height: 60,
   },
   progressBar: {
-    backgroundColor: '#EEE8A9',
-    height: 5,
+    backgroundColor: '#0F4B66',
+    height: 9,
     flexDirection: 'row',
-    width: `90%`,
+    width: '90%',
     borderRadius: 5,
   },
   set: {
     fontSize: 20,
     fontWeight: '600',
-    color: 'white',
+    color: '#92ff38',
   },
   inputs: {
     width: '100%',
@@ -294,14 +291,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   countText: {
-    color: '#6DFACD',
+    color: '#92ff38',
     fontSize: 24,
     fontWeight: '600',
     paddingHorizontal: 20,
   },
 
   inputText: {
-    color: '#6DFACD',
+    color: '#92ff38',
     fontSize: 16,
     fontWeight: '600',
   },

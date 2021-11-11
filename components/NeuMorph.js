@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 5,
     shadowColor: '#3b8cb5',
+    elevation: 3,
   },
   bottomShadow: {
     shadowOffset: {
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 5,
     shadowColor: '#132c39',
+    elevation: 3,
   },
 });
 export default NeuMorph;

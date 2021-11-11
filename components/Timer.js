@@ -15,6 +15,8 @@ import Button from './Button';
 import ModalPicker from './ModalPicker';
 import List from './List';
 import NeuMorph from './NeuMorph';
+import { Audio } from 'expo-av';
+import Slider from '@react-native-community/slider';
 
 const Timer = () => {
   const [exerciseTime, setExerciseTime] = useState({
@@ -37,6 +39,24 @@ const Timer = () => {
   const isPausedRef = useRef(isPaused);
   const [time, setTime] = useState([]);
   const [count, setCount] = useState(0);
+  const [sound, setSound] = useState(null);
+  const [volume, setVolume] = useState(0);
+
+  const palySound = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      !isBreak
+        ? require('.././assets/wood.mp3')
+        : require('.././assets/action.mp3')
+    );
+    await sound.setVolumeAsync(volume);
+    setSound(sound);
+
+    await sound.playAsync();
+  };
+  useEffect(() => {
+    return sound ? () => sound.unloadAsync() : undefined;
+  }, [sound, volume]);
+
   const saveTime = () => {
     setTime(() => {
       return [...time, { ...exerciseTime, ...breakTime, countSet }];
@@ -48,6 +68,9 @@ const Timer = () => {
     } else {
       secondRef.current--;
       setSecondsLeft(secondRef.current);
+      if (secondRef.current < 5) {
+        palySound();
+      }
     }
   };
 
@@ -58,6 +81,9 @@ const Timer = () => {
     } else {
       secondRef.current--;
       setSecondsLeft(secondRef.current);
+      if (secondRef.current < 5) {
+        palySound();
+      }
     }
   };
 
@@ -112,7 +138,7 @@ const Timer = () => {
   const percentage = Math.floor((100 / total) * secondsLeft);
   const minute = Math.floor(secondsLeft / 60);
   const secon = secondsLeft % 60;
-
+  console.log(volume);
   return (
     <View
       style={{
@@ -138,6 +164,7 @@ const Timer = () => {
                   />
                 )}
               </Text>
+
               <Text
                 style={{
                   color: !isBreak ? '#29C5BC' : '#048FA3',
@@ -173,6 +200,20 @@ const Timer = () => {
               </View>
             </NeuMorph>
           </View>
+          <NeuMorph>
+            <Slider
+              style={{
+                width: '90%',
+                height: 8,
+              }}
+              value={volume}
+              onValueChange={(vol) => setVolume(vol)}
+              minimumTrackTintColor="#FFFFFF"
+              maximumTrackTintColor="#000000"
+              minimumValue={0}
+              maximumValue={1}
+            />
+          </NeuMorph>
           <Text style={styles.set}>{`Set ${count} of ${countSet}`}</Text>
           <View style={{ marginVertical: 25 }}>
             <NeuMorph>

@@ -8,7 +8,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Timer />
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
     </View>
   );
 }

@@ -11,7 +11,7 @@ const NeuMorph = ({ children, boxSize, style }) => {
             {
               borderRadius: boxSize / 2 || 0,
               width: boxSize || 350,
-              height: boxSize || 55,
+              height: boxSize || 48,
             },
             style,
           ]}

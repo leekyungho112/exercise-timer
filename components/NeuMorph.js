@@ -57,9 +57,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#275c77',
+        elevation: 3,
       },
       topShadow: {
-        elevation: 5,
+        elevation: 1,
       },
       bottomShadow: {
         elevation: 4,

@@ -149,21 +149,19 @@ const Timer = () => {
     >
       {listMode ? (
         <>
-          <View style={{ marginTop: 50 }}>
+          <View style={{ marginTop: 40 }}>
             <NeuMorph boxSize={150}>
-              <Text>
-                {!isBreak ? (
-                  <Image
-                    style={styles.logo}
-                    source={require('.././assets/images/move.gif')}
-                  />
-                ) : (
-                  <Image
-                    style={styles.logo}
-                    source={require('.././assets/images/rest.gif')}
-                  />
-                )}
-              </Text>
+              {!isBreak ? (
+                <Image
+                  style={styles.logo}
+                  source={require('.././assets/images/move.gif')}
+                />
+              ) : (
+                <Image
+                  style={styles.logo}
+                  source={require('.././assets/images/rest.gif')}
+                />
+              )}
 
               <Text
                 style={{
@@ -171,6 +169,7 @@ const Timer = () => {
                   fontSize: 30,
                   fontWeight: '600',
                   textAlign: 'center',
+                  marginBottom: 20,
                 }}
               >
                 {!isBreak
@@ -305,7 +304,8 @@ const Timer = () => {
 const styles = StyleSheet.create({
   logo: {
     width: 60,
-    height: 60,
+    height: 50,
+    marginBottom: 30,
   },
   progressBar: {
     backgroundColor: '#0F4B66',

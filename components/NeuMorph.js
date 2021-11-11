@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 
 const NeuMorph = ({ children, boxSize, style }) => {
   return (
@@ -24,30 +24,47 @@ const NeuMorph = ({ children, boxSize, style }) => {
 };
 
 const styles = StyleSheet.create({
-  inner: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#275c77',
-  },
-  topShadow: {
-    shadowOffset: {
-      width: 3,
-      height: 3,
+  ...Platform.select({
+    ios: {
+      inner: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#275c77',
+      },
+      topShadow: {
+        shadowOffset: {
+          width: 3,
+          height: 3,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 5,
+        shadowColor: '#3b8cb5',
+        elevation: 5,
+      },
+      bottomShadow: {
+        shadowOffset: {
+          width: -3,
+          height: -3,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 5,
+        shadowColor: '#132c39',
+        elevation: 4,
+      },
     },
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowColor: '#3b8cb5',
-    elevation: 3,
-  },
-  bottomShadow: {
-    shadowOffset: {
-      width: -3,
-      height: -3,
+    android: {
+      inner: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#275c77',
+      },
+      topShadow: {
+        elevation: 5,
+      },
+      bottomShadow: {
+        elevation: 4,
+      },
     },
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowColor: '#132c39',
-    elevation: 3,
-  },
+  }),
 });
 export default NeuMorph;
